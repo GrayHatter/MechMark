@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="has-background-grey-lighter">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MechMark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/css/all.css">
+    <style type="text/css">
+      @media screen and (max-width: 1024px) {
+        .navbar input[type=checkbox]:checked + div.navbar-menu {
+          display: block;
+          width: 100%;
+        }
+        .navbar input[type=checkbox]:not(:checked) + div.navbar-menu {
+          display: none;
+        }
+      }
+    </style>
+
+  </head>
+  <body>
+  {% block body %}
+    {% block nav %}
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+      <div class="container">
+
+        <div class="navbar-brand">
+          <a class="navbar-item" href="https://mechmark.bsdev.net">MechMark</a>
+
+          <label for="navbar-ex" style="margin-left:auto;">
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </label>
+        </div>
+
+        <label for="navbar-ex" style="flex-grow: 1; flex-shrink: 0; align-items: stretch; display: flex;">
+          <input type="checkbox" id="navbar-ex" style="display: none">
+          <div class="navbar-menu">
+            <div class="navbar-start">
+              <a class="navbar-item" href="/Boards">Boards</a>
+              <a class="navbar-item" href="/Parts">Parts</a>
+              <a class="navbar-item" href="/FAQ">FAQ</a>
+            </div>
+
+            <div class="navbar-end">
+              <div class="navbar-item">
+                {% if current_user %}
+                <p>Logged in as {{ current_user.nickname if current_user.nickname else current_user.username }}</p>
+                {% else %}
+                <div class="buttons">
+                  <a class="button" href="/Register"><strong>Sign up</strong></a>
+                  <a class="button is-light" href="/Login">Log in</a>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </label>
+
+      </div>
+    </nav>
+    {% endblock %}
+
+
+  <section class="section">
+    <div class="container">
+    {% block content %}
+      <h1 class="title">
+        Welcome To MechMark
+      </h1>
+      <p class="subtitle">
+        A listing service of mechanical keyboard parts for builders.
+      </p>
+    {% endblock %}
+    </div>
+  </section>
+
+  {% endblock %}
+  </body>
+</html>

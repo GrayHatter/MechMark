@@ -1,0 +1,33 @@
+{% macro board_card(board) %}
+<div class="card">
+  <div class="card-image">
+    <figure class="image is-4by3">
+      <img src="/static/user_img/{{ board.primary_image.location }}" alt="{{ board.name}} Image">
+    </figure>
+  </div>
+  <div class="card-content">
+    <div class="media">
+      <div class="media-content">
+        <p class="title is-4">{{ board.name }} </p>
+{#-         <p class="subtitle is-6">@johnsmith</p> #}
+      </div>
+    </div>
+
+    <div class="content">
+      {% for tag in board.tags %}
+      <a href="#">#{{ tag.name }}</a>
+      {% endfor %}
+      <br>
+      <time datetime="{{ board.created }}">Created {{ board.created }}</time>
+    </div>
+  </div>
+</div>
+
+{% endmacro %}
+
+
+{% for board in boards %}
+  {{ board_card(board) }}
+{% else %}
+  no boards
+{% endfor %}

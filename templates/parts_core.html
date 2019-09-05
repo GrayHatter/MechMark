@@ -1,0 +1,52 @@
+    <table class="table is-hoverable is-fullwidth" id="parts-table">
+      <thead>
+        <tr>
+          <th>Part Name</th>
+          <th>Part Num</th>
+          <th>Supplier Count</th>
+          <th>User Count</th>
+          <th>Cost Low</th>
+          <th>Cost High</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>Part Name</th>
+          <th>Part Num</th>
+          <th>Supplier Count</th>
+          <th>User Count</th>
+          <th>Cost Low</th>
+          <th>Cost High</th>
+        </tr>
+      </tfoot>
+      <tbody>
+        {% for part in parts %}
+        <tr>
+          <td>{{ part.name }}</td>
+          <td>{{ part.num }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td>No Parts found</td>
+          <td></td>
+        </tr>
+        {% if current_user %}
+        <tr>
+          <td colspan="6">
+            <div class="field has-addons has-addons is-fullwidth">
+              <p class="control is-expanded">
+                <input class="input" type="text" placeholder="Part Name">
+              </p>
+              <p class="control is-expanded">
+                <input class="input" type="text" placeholder="Part Number">
+              </p>
+              <p class="control">
+                <a class="button is-primary">Add</a>
+              </p>
+            </div>
+          </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>

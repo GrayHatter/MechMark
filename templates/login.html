@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% from 'macros.html' import field %}
+
+{% block content %}
+  <form action="/Login/Send" method="POST">
+
+    {% if valid and not valid.ok %}
+    {{ valid.summary('@all') }}
+    {% endif %}
+
+    {{ field('User Name', 'user', 'Username', icon='user fas', valid=valid) }}
+
+  </form>
+
+{% endblock %}
