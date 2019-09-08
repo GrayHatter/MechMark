@@ -1,3 +1,5 @@
+import regex as re
+
 from sqlalchemy import func
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy import ForeignKey
@@ -23,6 +25,8 @@ class Board(Base):
     images = relationship("BoardImage", back_populates='board', uselist=True, order_by="desc(BoardImage.created)")
     tags = relationship("BoardTag", uselist=True)
 
+    parts = relationship("BoardPart")
+
     @hybrid_property
     def q(self):
         if hasattr(self, 'query'):
@@ -34,6 +38,10 @@ class Board(Base):
         if len(self.images) == 0:
             return None
         return self.images[0]
+
+    @hybrid_property
+    def html_name(self):
+        return re.sub(r'\s', '_', self.name)
 
 
 class BoardImage(Base):
@@ -64,21 +72,31 @@ class BoardTag(Base):
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
 
 
-class BoardPartList(Base):
-    __tablename__ = 'board_part_lists'
+class BoardPart(Base):
+    __tablename__ = 'board_parts'
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=func.now())
     updated = Column(DateTime, default=func.now(), onupdate=func.now())
 
     part_id = Column(Integer, ForeignKey('parts.id'))
     board_id = Column(Integer, ForeignKey('boards.id'))
-    count = Column(Integer)
+    owner_id = Column(Integer, ForeignKey('users.id'))
 
+    count = Column(Integer)
+    optional = Column(Boolean)
+    note = Column(String)
+
+    board = relationship('Board')
     part = relationship('Part')
+    owner = relationship('User')
 
     @hybrid_property
-    def part_name(self):
+    def name(self):
         return self.part.name
+
+    @hybrid_property
+    def num(self):
+        return self.part.num
 
 
 class BoardWorkList(Base):

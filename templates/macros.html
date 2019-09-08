@@ -1,10 +1,8 @@
-{% macro field_input(label, name, place, default, icon, help, valid, type) -%}
+{% macro field_input(name, place, default, icon, help, valid, type) -%}
     {% if place == none %}
     {% set place = label %}
     {% endif %}
 
-    <div class="field">
-      <label class="label">{{ label }}</label>
       <div class="control{{ ' has-icons-left' if icon }}{{ ' has-icons-right' if valid and valid.summary(name) }}">
         <input name="{{ name }}" class="input{{ ' is-danger' if valid and valid.summary(name) }}"
           type="{{ type }}" placeholder="{{ place }}"
@@ -26,10 +24,37 @@
     </div>
 {% endmacro %}
 
-{% macro field(label, name, place=None, default=None, icon=None, help=None, valid=None, type='input') -%}
-   {%- if type == 'radio' %}
-   {%- elif type == 'checkbox' %}
-   {%- else %}
-   {{- field_input(label, name, place, default, icon, help, valid, type) -}}
-   {% endif %}
+{% macro field_drop(name, lines, icon, help, valid) -%}
+      <div class="control{{ ' has-icons-left' if icon }}{{ ' has-icons-right' if valid and valid.summary(name) }}">
+        <div class="select">
+          <select name="{{ name }}" class="{{ 'is-danger' if valid and valid.summary(name) }}">
+            {% for l in lines %}
+              <option value="{{ l[1] }}" {{ "selected" if l[3] }}>{{ l[0] }}</option>
+            {% endfor %}
+          </select>
+        {% if icon %}
+        <span class="icon is-small is-left"><i class="fa-{{ icon }}"></i></span>
+        {% endif %}
+        {% if valid and valid.summary(name) %}
+        <span class="icon is-small is-right is-danger"><i class="fas fa-exclamation-triangle"></i></span>
+        {% endif %}
+      </div>
+      {% if valid and valid.summary(name) %}
+      <p class="help is-danger">{{ valid.summary(name) }}<br>{{ help if help }}</p>
+      {% elif help %}
+      <p class="help">{{ help }}</p>
+      {% endif %}
+    </div>
 {% endmacro %}
+
+{% macro field(label, name, place=None, default=None, icon=None, help=None, valid=None, type='input') -%}
+    <div class="field">
+      <label class="label">{{ label }}</label>
+       {%- if type == 'radio' %}
+       {%- elif type == 'checkbox' %}
+       {%- else %}
+       {{- field_input(name, place, default, icon, help, valid, type) -}}
+       {% endif %}
+    </div>
+{% endmacro %}
+

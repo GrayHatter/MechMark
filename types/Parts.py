@@ -1,6 +1,10 @@
+import regex as re
+
 from sqlalchemy import func
 from sqlalchemy import ForeignKey
 from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.orm import relationship
+
 
 from ..db import Base
 
@@ -16,6 +20,10 @@ class Part(Base):
     num = Column(String)
 
     owner_id = Column(Integer, ForeignKey('users.id'))
+
+    tags = relationship("PartTag", uselist=True)
+    stock = relationship("PartStock", uselist=True)
+    sources = relationship("PartSource", uselist=True)
 
 
 class PartTag(Base):
@@ -38,7 +46,7 @@ class PartSource(Base):
     disabled = Column(DateTime, default=None)
 
     owner_id = Column(Integer, ForeignKey('users.id'))
-    part_id = Column(Integer, ForeignKey('users.id'))
+    part_id = Column(Integer, ForeignKey('parts.id'))
 
     cost = Column(Integer)
     currency = Column(String)

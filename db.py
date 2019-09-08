@@ -1,23 +1,27 @@
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import scoped_session, sessionmaker
-
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from werkzeug.local import LocalProxy
 
 from datetime import datetime
 
 
-Base = declarative_base()
-
 _db = None
 db = LocalProxy(lambda: _db)
 
 
-def cls_query(val, session):
-    print(val)
-    print(session)
-    return None
+@as_declarative()
+class Base(object):
+    @hybrid_property
+    def q(self):
+        if hasattr(self, 'query'):
+            if hasattr(self, 'deleted'):
+                return self.query.filter(self.deleted == None)
+
+            return self.query
+        return None
 
 
 class DBSession():
@@ -44,4 +48,3 @@ class DBSession():
 
     def create(self):
         Base.metadata.create_all(bind=self.engine)
-

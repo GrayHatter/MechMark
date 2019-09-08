@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+{% from 'macros.html' import field_input %}
+
+
+{% block content %}
+
+  <div class="content">
+    <div class="columns">
+      <div class="column">
+        <h1 class="title">
+          {{ part.name }}
+        </h1>
+
+        {% for tag in part.tags %}
+        <a href="#">#{{ tag.name }}</a>
+        {% endfor %}
+
+        <time datetime="{{ part.created }}">Created {{ part.created }}</time>
+      </div>
+
+    </div>
+
+
+  </div>
+
+{% endblock %}

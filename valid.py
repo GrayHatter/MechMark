@@ -5,6 +5,10 @@ from secrets import token_urlsafe
 from enum import Enum, IntEnum
 
 
+class CSRFTError(Exception):
+    pass
+
+
 class ValidationError:
     def __init__(self, field, message):
         self.field = field
@@ -20,7 +24,7 @@ class ValidationError:
 
 
 class Validate:
-    def __init__(self, request):
+    def __init__(self, request, require_csrft=True):
         if isinstance(request, dict):
             self.source = request
         else:
@@ -35,6 +39,10 @@ class Validate:
         self._kwargs = {
             "valid": self
         }
+        if require_csrft:
+            self._csrft = self.source.get('_csrft')
+            if self._csrft is None:
+                raise CSRFTError()
 
     @property
     def ok(self):

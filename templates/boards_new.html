@@ -3,6 +3,7 @@
 
 {% block content %}
   <form action="{{ url_for('.new_POST') }}" method="POST" enctype=multipart/form-data>
+    {{ csrft_input }}
 
     {% if valid and not valid.ok %}
     {{ valid.summary('@all') }}

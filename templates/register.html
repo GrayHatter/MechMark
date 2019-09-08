@@ -3,6 +3,7 @@
 
 {% block content %}
   <form action="/Register/Send" method="POST">
+    {{ csrft_input }}
 
     {% if valid and not valid.ok %}
     {{ valid.summary('@all') }}

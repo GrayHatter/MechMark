@@ -2,12 +2,12 @@ import os
 import datetime as dt
 
 import flask
-from flask import redirect, request, render_template, url_for
+from flask import redirect, request, render_template, url_for, session
 from flask_login import LoginManager, current_user
 
 from jinja2 import FileSystemLoader, ChoiceLoader
 
-from mechmark.valid import Validate
+from mechmark.valid import Validate, HTML_CSRFT
 from mechmark.db import DBSession
 from mechmark.config import Configuration
 from mechmark.types.Users import User
@@ -58,12 +58,12 @@ def fix_db():
 def inject():
     return {
         'request': request,
-        'valid': Validate(request),
+        'valid': Validate(request, require_csrft=False),
         'dt': dt,
         'str': str,
         'current_user': current_user,
         'cfg': cfg,
-        '__csrft': '',
+        'csrft_input': HTML_CSRFT(session),
         'url_for': url_for,
     }
 

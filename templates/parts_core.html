@@ -1,52 +1,63 @@
-    <table class="table is-hoverable is-fullwidth" id="parts-table">
-      <thead>
-        <tr>
-          <th>Part Name</th>
-          <th>Part Num</th>
-          <th>Supplier Count</th>
-          <th>User Count</th>
-          <th>Cost Low</th>
-          <th>Cost High</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th>Part Name</th>
-          <th>Part Num</th>
-          <th>Supplier Count</th>
-          <th>User Count</th>
-          <th>Cost Low</th>
-          <th>Cost High</th>
-        </tr>
-      </tfoot>
-      <tbody>
-        {% for part in parts %}
-        <tr>
-          <td>{{ part.name }}</td>
-          <td>{{ part.num }}</td>
-        </tr>
-        {% else %}
-        <tr>
-          <td>No Parts found</td>
-          <td></td>
-        </tr>
-        {% if current_user %}
-        <tr>
-          <td colspan="6">
-            <div class="field has-addons has-addons is-fullwidth">
-              <p class="control is-expanded">
-                <input class="input" type="text" placeholder="Part Name">
-              </p>
-              <p class="control is-expanded">
-                <input class="input" type="text" placeholder="Part Number">
-              </p>
-              <p class="control">
-                <a class="button is-primary">Add</a>
-              </p>
-            </div>
-          </td>
-        </tr>
-        {% endif %}
-        {% endfor %}
-      </tbody>
-    </table>
+{% from 'macros.html' import field_input with context %}
+
+    <form method="POST" action="{{ url_for('.new_POST') }}">
+      {{ csrft_input }}
+      <table class="table is-hoverable is-fullwidth" id="parts-table">
+        <thead>
+          <tr>
+            <th>Part Name</th>
+            <th>Part Num</th>
+            <th>Supplier Count</th>
+            <th>User Count</th>
+            <th>Cost</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for part in parts %}
+          <tr>
+            <td>{{ part.name }}</td>
+            <td>{{ part.num }}</td>
+            <td>{{ part.sources | length }}</td>
+            <td>{{ part.stock | length }}</td>
+            <td>{{ part.stock | length }}</td>
+            <td>
+              <div class="buttons has-addons is-right">
+                <a class="button is-info is-outlined" href="{{ url_for('.view', id_=part.id) }}">
+                  <span class="icon is-small is-left"><i class="fa-eye fas"></i>
+                </a>
+                <a class="button is-warning is-outlined" href="{{ url_for('.edit', id_=part.id) }}">
+                  <span class="icon is-small is-left"><i class="fa-edit fas"></i>
+                </a>
+                <a class="button is-success is-outlined" href="{{ url_for('.stock_add', id_=part.id) }}">
+                  <span class="icon is-small is-left"><i class="fa-plus fas"></i>
+                </a>
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6">No Parts found</td>
+          </tr>
+          {% endfor %}
+          {% if current_user %}
+          <tr>
+            <td colspan="2">
+              {{ field_input('name', "Part Name", valid=valid) }}
+            </td>
+            <td colspan="3">
+              {{ field_input('number', "Part Number", valid=valid) }}
+            </td>
+            <td>
+              <div class="buttons is-right">
+                <button class="button is-success is-outlined">
+                  <span class="icon is-small is-left"><i class="fa-plus fas"></i></span>
+                  <span>Add</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </form>

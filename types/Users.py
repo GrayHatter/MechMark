@@ -4,9 +4,7 @@ from secrets import token_urlsafe
 
 from sqlalchemy import Column, Integer, BigInteger, String, DateTime, Text, Unicode
 from sqlalchemy import func
-from sqlalchemy import UniqueConstraint
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import CIDR, UUID
 
 from mechmark.db import Base
@@ -29,7 +27,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=func.now())
     updated = Column(DateTime, default=func.now(), onupdate=func.now())
-    disabled = Column(DateTime, default=None)
+    deleted = Column(DateTime, default=None)
 
     username = Column(Unicode, unique=True)
     nickname = Column(Unicode)
@@ -41,11 +39,13 @@ class User(Base):
 
     postal = Column(String, default=0)
     bio = Column(Text)
-    last_ip = Column(CIDR)
+    default_currency = Column(String)
 
     discord_id = Column(BigInteger)
     discord_name = Column(Unicode)
     discord_key = Column(UUID)
+
+    last_ip = Column(CIDR)
 
     def __repr__(self):
         return '<User Object for {}>'.format(self.username)
@@ -53,15 +53,15 @@ class User(Base):
     @hybrid_property
     def q(self):
         if hasattr(self, 'query'):
-            return self.query.filter(self.disabled == None)
+            return self.query.filter(self.deleted == None)
         return None
 
     # flask -_-
     def is_authenticated(self):
-        return self.disabled == None
+        return self.deleted == None
 
     def is_active(self):
-        return self.disabled == None
+        return self.deleted == None
 
     def is_anonymous(self):
         return False

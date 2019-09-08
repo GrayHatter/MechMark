@@ -1,0 +1,79 @@
+{% extends 'index.html' %}
+{% from 'macros.html' import field_input, field_drop %}
+
+
+{% block content %}
+
+  <div class="content">
+    <div class="columns">
+      <div class="column">
+        <h1 class="title">
+          {{ board.name }}
+        </h1>
+
+        {% for tag in board.tags %}
+        <a href="#">#{{ tag.name }}</a>
+        {% endfor %}
+
+        <time datetime="{{ board.created }}">Created {{ board.created }}</time>
+      </div>
+
+      <div class="column">
+        <figure class="image">
+            <img src="/static/user_img/{{ board.primary_image.location }}" alt="{{ board.name}} Image">
+        </figure>
+      </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('.part_add_POST', name=board.html_name) }}">
+      {{ csrft_input }}
+      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <thead>
+          <th>Name</th>
+          <th>Number</th>
+          <th>Count Needed</th>
+          <th>Optional</th>
+          <th>Notes</th>
+          <th></th>
+        </thead>
+        <tbody>
+          {% for part in board.parts %}
+            <tr>
+              <td>{{ part.name }}</td>
+              <td>{{ part.num }}</td>
+              <td>{{ part.count }}</td>
+              <td>{{ part.optional }}</td>
+              <td>{{ part.note }}</td>
+              <td></td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5">No parts found</td>
+            </tr>
+          {% endfor %}
+            <tr>
+              <td colspan="2">
+                {{ field_input('name_num', "Part name or Number", valid=valid) }}
+              </td>
+              <td>
+                {{ field_input('count', "Count", default="0", valid=valid) }}
+              </td>
+              <td>
+                {{ field_drop('optional', [("Optional", 1, True), ("Required", 0, False)], valid=valid) }}
+              </td>
+              <td>
+                {{ field_input('note', 'Notes', valid=valid) }}
+              </td>
+              <td>
+                <button class="button is-success is-outlined is-fullwidth">
+                  <span class="icon is-small is-left"><i class="fa-plus fas"></i>Add</span>
+                </button>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+    </form>
+
+  </div>
+
+{% endblock %}
