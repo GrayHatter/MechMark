@@ -22,17 +22,19 @@
             <td>{{ part.stock | length }}</td>
             <td>{{ part.stock | length }}</td>
             <td>
+              {% if current_user %}
               <div class="buttons has-addons is-right">
                 <a class="button is-info is-outlined" href="{{ url_for('.view', id_=part.id) }}">
-                  <span class="icon is-small is-left"><i class="fa-eye fas"></i>
+                  <span class="icon is-small is-left"><i class="fa-eye fas"></i></span>
                 </a>
                 <a class="button is-warning is-outlined" href="{{ url_for('.edit', id_=part.id) }}">
-                  <span class="icon is-small is-left"><i class="fa-edit fas"></i>
+                  <span class="icon is-small is-left"><i class="fa-edit fas"></i></span>
                 </a>
                 <a class="button is-success is-outlined" href="{{ url_for('.stock_add', id_=part.id) }}">
-                  <span class="icon is-small is-left"><i class="fa-plus fas"></i>
+                  <span class="icon is-small is-left"><i class="fa-plus fas"></i></span>
                 </a>
-              </a>
+              </div>
+              {% endif %}
             </td>
           </tr>
           {% else %}

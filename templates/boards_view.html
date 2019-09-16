@@ -51,6 +51,7 @@
               <td colspan="5">No parts found</td>
             </tr>
           {% endfor %}
+            {% if current_user %}
             <tr>
               <td colspan="2">
                 {{ field_input('name_num', "Part name or Number", valid=valid) }}
@@ -70,6 +71,7 @@
                 </button>
               </td>
             </tr>
+            {% endif %}
         </tbody>
       </table>
     </form>
